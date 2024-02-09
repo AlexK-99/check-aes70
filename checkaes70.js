@@ -1,11 +1,18 @@
 import { TCPConnection, RemoteDevice, RemoteControlClasses, Types } from 'aes70'
 import * as fs from 'fs';
+import { readFile } from 'fs/promises';
 
 async function run()
 {
+    const json = JSON.parse(
+        await readFile(
+            new URL('./config.json', import.meta.url)
+            )
+    );
+
     const connection = await TCPConnection.connect({
-        host: "10.1.11.120",
-        port: 50014,
+        host: json.host,
+        port: json.port,
     });
     const device = new RemoteDevice(connection);
 
@@ -32,8 +39,8 @@ async function run()
       else
       {
           let ele = {"type":  obj.constructor.ClassName}
-          console.log("Type: %s", obj.constructor.ClassName);
-          console.log("Properties:");
+          //console.log("Type: %s", obj.constructor.ClassName);
+          //console.log("Properties:");
           const properties = obj.GetPropertySync();
 
           // fetch the values of all properties from the device.

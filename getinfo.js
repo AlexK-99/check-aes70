@@ -1,22 +1,27 @@
-import { TCPConnection, RemoteDevice, RemoteControlClasses, Types } from 'aes70'
-import * as fs from 'fs';
 
-async function run()
-{
-    const connection = await TCPConnection.connect({
-        host: "10.1.11.120",
-        port: 50014,
-    });
-    const device = new RemoteDevice(connection);
+    import { TCPConnection, RemoteDevice } from 'aes70';
 
-    device.set_keepalive_interval(1);
+    async function run()
+    {
+        const connection = await TCPConnection.connect({
+            host: "10.1.11.120",
+            port: 50014,
+        });
+        const device = new RemoteDevice(connection);
 
-    console.log("Device name:", await device.DeviceManager.GetModelDescription());
+        device.set_keepalive_interval(1);
 
-    console.log("Object inside this device:");
+        console.log("Device name:", await device.DeviceManager.GetModelDescription());
 
-    const tree = await device.get_device_tree();
+        console.log("Object inside this device:");
+        let keys =[];
+        device.get_role_map().then((map) => {
+            keys = [...map.keys()];
+            console.log(keys)
+        })
+
+    }
+
+    run().then(() => console.log("Done."));
+
     
-}
-
-run().then(() => console.log("Done."));

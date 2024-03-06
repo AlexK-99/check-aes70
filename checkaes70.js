@@ -57,6 +57,11 @@ async function run()
     };
 
     await rec(tree);
+    let keys =[];
+    device.get_role_map().then((map) => {
+        keys = [...map.keys()];
+        fs.writeFileSync('./rolemapdata.json', JSON.stringify(allele) , 'utf-8');
+    })
     fs.writeFileSync('./msgdata.json', JSON.stringify(allele) , 'utf-8');
 }
 
